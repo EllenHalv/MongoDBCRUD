@@ -1,12 +1,13 @@
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
+import com.mongodb.*;
 import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
 import java.util.ArrayList;
-
+import com.mongodb.ConnectionString;
+import com.mongodb.ServerApi;
+import com.mongodb.ServerApiVersion;
+import com.mongodb.MongoClientSettings;
 public class MongoDBPersonFacade {
     MongoClient client;
     MongoDatabase db;
@@ -59,7 +60,7 @@ public class MongoDBPersonFacade {
         // lambda version
         ArrayList<Person> people = new ArrayList<>();
         //             var -> lista.kommando(param)
-        result.forEach(person -> people.add(Person.fromDoc(person)));
+        result.forEach((Block<? super Document>) person -> people.add(Person.fromDoc(doc))); //här kan det vara crazy
 
     /* for loop
     for(Document res : result) {

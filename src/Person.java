@@ -13,7 +13,7 @@ public class Person {
     }
 
     public Person(String id, String name, String age, String address) {
-        this.id = id;
+        this.id = id; // genereras av databasen
         this.name = name;
         this.age = age;
         this.address = address;

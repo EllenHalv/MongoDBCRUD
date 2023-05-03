@@ -10,6 +10,10 @@ public class Main {
 
         Logger.getLogger("org.mongodb.driver").setLevel(Level.SEVERE); // WARNING
 
+        MongoDBPersonFacade dbFacade = new MongoDBPersonFacade();
+        Person person = new Person("John Doe", "42", "Somewhere");
+        dbFacade.insertOne(person);
+
         //Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
         //mongoLogger.setLevel(Level.SEVERE); // en alternativ lösning
 
