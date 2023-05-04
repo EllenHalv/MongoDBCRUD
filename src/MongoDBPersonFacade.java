@@ -13,7 +13,7 @@ public class MongoDBPersonFacade {
     MongoDatabase db;
     MongoCollection<Document> collection;
     String connString = "mongodb://localhost:27017";
-    String collectionName = "allPeople";
+    String collectionName = "customers";
     String databaseName = "shop";
 
     public MongoDBPersonFacade(String connString, String collectionName, String databaseName) {
@@ -57,16 +57,9 @@ public class MongoDBPersonFacade {
         Document doc = new Document("name", name);
         FindIterable<Document> result = collection.find(doc);
 
-        // lambda version
         ArrayList<Person> people = new ArrayList<>();
         //             var -> lista.kommando(param)
-        result.forEach((Block<? super Document>) person -> people.add(Person.fromDoc(doc))); //här kan det vara crazy
-
-    /* for loop
-    for(Document res : result) {
-        heroes.add(Hero.fromDoc(res));
-    }
-    */
+        result.forEach(hero -> people.add(Person.fromDoc(hero)));
         return people;
     }
     public void connect() {
@@ -85,6 +78,12 @@ public class MongoDBPersonFacade {
             collection = db.getCollection(collectionName);
         } catch (Exception e) {
             System.out.println("Error connecting to database: " + e.getMessage());
+        }
+
+        try {
+            createIndex(); // Skapar indexet för att säkerställa unika namn och öka sökhastigheten.
+        } catch (Exception e) {
+            System.out.println("Ooops! " + e.getMessage()); // Skriver ut ett meddelande om indexet inte kunde skapas.
         }
     }
 }
