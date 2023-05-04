@@ -3,6 +3,7 @@ import com.mongodb.client.*;
 import org.bson.Document;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,16 +14,6 @@ public class Main {
 
         Logger.getLogger("org.mongodb.driver").setLevel(Level.SEVERE); // ger endast felmeddelanden av typen severe
 
-        /*MongoDBPersonFacade dbFacade = new MongoDBPersonFacade(); // create new instance of MongoDBPersonFacade
-        Person person = new Person("John Doe", "42", "Somewhere"); // add person
-        dbFacade.insertOne(person);*/
-
-        /*KeyHandler key = new KeyHandler("MongoDB");
-        MongoDBPersonFacade db = new MongoDBPersonFacade(
-                key.GetKey("connectionString"),
-                key.GetKey("collection"),
-                key.GetKey("database"));*/
-
         KeyHandler key = new KeyHandler("MongoDB");
         String connectionString = key.GetKey("connectionString");
         String collectionName = key.GetKey("collection");
@@ -32,18 +23,20 @@ public class Main {
         }
         MongoClient client = MongoClients.create(connectionString);
 
-        //MongoClient client = MongoClients.create(key.getConnectionString());
         MongoDatabase mongodb = client.getDatabase("shop");
         MongoCollection<Document> collection = mongodb.getCollection("customers");
 
-        FindIterable<Document> result = collection.find();
-
-        Document doc = new Document("name", "John Doe");
-        long count = collection.countDocuments(doc);
-
-        if (count == 0) {
-            collection.insertOne(doc);
+        ArrayList<Person> people = new ArrayList<>();
+        people.add(new Person("Lana Del Roy", "22", "Angel City")); // skapar en person
+        people.add(new Person("Clark Knot", "18", "Metropolis")); // skapar en person
+        people.add(new Person("Clark Knot", "Superman", "Metropolis")); // skapar en person
+        people.add(new Person("Clark Knot", "Superman", "Metropolis")); // skapar en person
+        //collection.insertOne(person.toDoc());
+        for (Person person : people) {
+            collection.insertOne(person.toDoc());
         }
+
+        FindIterable<Document> result = collection.find();
 
         for(Document res : result) {
             System.out.println(res.toJson());

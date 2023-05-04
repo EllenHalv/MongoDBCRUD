@@ -33,7 +33,7 @@ public class KeyHandler {
         setConnectionString(prop.getProperty("connectionString"));
     }
 
-    public String GetKey(String string) {
+    public String GetKey(String key) {
         Properties prop = new Properties();
         try {
             FileInputStream input = new FileInputStream(keyFilePath);
@@ -42,6 +42,6 @@ public class KeyHandler {
             System.out.println(ex.getMessage());
             return null;
         }
-        return prop.getProperty(string);
+        return prop.getProperty(key);
     }
 }

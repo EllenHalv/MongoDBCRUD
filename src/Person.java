@@ -81,6 +81,7 @@ public class Person {
                 .append("id", id);
         return doc;
     }
+
     public String toJson() {
         return toDoc().toJson();
 
