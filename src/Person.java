@@ -66,8 +66,7 @@ public class Person {
                 doc.getString("name"),
                 doc.getString("age"),
                 doc.getString("address"),
-                doc.getString("id")
-        );
+                doc.getString("id"));
     }
     public static Person fromJson(String json) {
         Document doc = Document.parse(json); // Skapar ett bson dokument från json
@@ -84,15 +83,5 @@ public class Person {
 
     public String toJson() {
         return toDoc().toJson();
-
-        /* det här är fult men inte "fel"
-        String json = "{";
-        json += "\"name\":\"" + this.name + "\",";
-        json += "\"alias\":\"" + this.alias + "\",";
-        json += "\"city\":\"" + this.city + "\",";
-        json += "\"id\":\"" + this.id + "\"";
-        json += "}";
-        return json;
-         */
     }
 }

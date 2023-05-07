@@ -3,10 +3,11 @@ import java.util.Properties;
 
 public class KeyHandler {
     private String connectionString;
-    private final String keyFilePath = System.getProperty("user.home") + "/Documents/Java code stuff/API keys/shop.txt";
+    private String keyFilePath;
 
-    public KeyHandler(String connString) {
-
+    public KeyHandler(String keyFilePath) {
+        this.keyFilePath = keyFilePath;
+        getConnectionStringFromFile();
     }
 
     public String getConnectionString() {

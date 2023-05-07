@@ -4,7 +4,7 @@ public class Employee extends Person{
         super(name, age, address);
     }
 
-    public Employee(String employeeId, String name, String age, String address) {
+    public Employee(String name, String age, String address, String employeeId) {
         super(employeeId, name, age, address);
     }
 
