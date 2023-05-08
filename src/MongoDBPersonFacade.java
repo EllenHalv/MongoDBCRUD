@@ -27,6 +27,7 @@ public class MongoDBPersonFacade {
         client = MongoClients.create(connString);
         connect();
     }
+    // Creates a new person in the database
     public void insertOne(Person person) {
         Document doc = person.toDoc();
         doc.remove("id");
@@ -37,10 +38,12 @@ public class MongoDBPersonFacade {
         }
     }
 
+    // Creates an index for the name field to ensure unique names and increase search speed.
     public void createIndex() {
         collection.createIndex(new Document("name", 1), new IndexOptions().unique(true));
     }
 
+    // Finds an employee by their employeeId
     public Person findByEmployeeId(String employeeId) {
         Document doc = new Document("employeeId", employeeId);
         Document search = collection.find(doc).first();
@@ -48,6 +51,7 @@ public class MongoDBPersonFacade {
         return person;
     }
 
+    // Finds a customer by their customerId
     public Person findByCustomerId(String customerId) {
         Document doc = new Document("customerId", customerId);
         Document search = collection.find(doc).first();
@@ -55,11 +59,20 @@ public class MongoDBPersonFacade {
         return person;
     }
 
+    // Updates a person by their id
+    public void updateName(String id, String newValue) {
+        Document doc = new Document("id", new ObjectId(id));
+        Document update = new Document("$set", new Document("name", newValue));
+        collection.updateOne(doc, update);
+    }
+
+    // Delete a person by their id
     public void delete(String id) {
         Document doc = new Document("id", new ObjectId(id));
         collection.deleteOne(doc);
     }
 
+    // Find a person by their name
     public ArrayList<Person> findByName(String name) {
         Document doc = new Document("name", name);
         FindIterable<Document> result = collection.find(doc);
@@ -69,6 +82,7 @@ public class MongoDBPersonFacade {
         return people;
     }
 
+    // Find a person by their objectId
     public Person findByObjectId(String id) {
         Document doc = new Document("_id", new ObjectId(id));
         Document search = collection.find(doc).first();
@@ -77,28 +91,7 @@ public class MongoDBPersonFacade {
         return person;
     }
 
-    /*public void connect() {
-        ServerApi serverApi = ServerApi.builder()
-                .version(ServerApiVersion.V1)
-                .build();
-
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(connString))
-                .serverApi(serverApi)
-                .build();
-        try {
-            client = MongoClients.create(settings);
-            db = client.getDatabase(databaseName);
-            collection = db.getCollection("customers");
-        } catch (Exception e) {
-            System.out.println("Error connecting to database: " + e.getMessage());
-        }
-        try {
-            createIndex(); // Skapar indexet för att säkerställa unika namn och öka sökhastigheten.
-        } catch (Exception e) {
-            System.out.println("Ooops! " + e.getMessage()); // Skriver ut ett meddelande om indexet inte kunde skapas.
-        }
-    }*/
+    // Connects to the database
     public void connect() {
         ServerApi serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
@@ -110,11 +103,8 @@ public class MongoDBPersonFacade {
                 .build();
         try {
             client = MongoClients.create(settings);
-            System.out.println("Client created successfully.");
             db = client.getDatabase(databaseName);
-            System.out.println("Database retrieved successfully.");
             collection = db.getCollection("customers");
-            System.out.println("Collection retrieved successfully.");
         } catch (Exception e) {
             System.out.println("Error connecting to database: " + e.getMessage());
         }
@@ -125,7 +115,7 @@ public class MongoDBPersonFacade {
         }
     }
 
-
+    // Gets all customers from the database
     public ArrayList<Person> getAllCustomers() {
         try {
             MongoCollection<Document> collection = db.getCollection("customers");
@@ -143,6 +133,7 @@ public class MongoDBPersonFacade {
         }
     }
 
+    // Gets all employees from the database
     public ArrayList<Person> getAllEmployees() {
         try {
             MongoCollection<Document> collection = db.getCollection("employees");
@@ -156,6 +147,8 @@ public class MongoDBPersonFacade {
             return null;
         }
     }
+
+    // Gets all people from the database
     public ArrayList<Person> getAllPeople() {
         try {
             MongoCollection<Document> customers = db.getCollection("customers");
