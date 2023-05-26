@@ -8,7 +8,7 @@ public class KeyHandler {
     private Properties properties;
 
     public KeyHandler() {
-        String keyFilePath = System.getProperty("user.home") + "/Documents/Java code stuff/API keys/MongoDB.txt";
+        String keyFilePath = System.getProperty("user.home") + "/Documents/MongoDB.txt";
         this.keyFilePath = keyFilePath;
         properties = loadProperties();
         connectionString = properties.getProperty("connectionString");
