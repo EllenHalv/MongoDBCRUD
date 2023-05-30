@@ -14,8 +14,9 @@ public class Main {
 
         // Create and connect to the database
         try {
-            KeyHandler key = new KeyHandler();
-            String connectionString = key.getConnectionStringFromFile("/Documents/Java code stuff/API keys/MongoDB.txt");
+            String keyFilePath = "C:/Users/ellen/Documents/Java code stuff/API keys/MongoDB.txt";
+            KeyHandler key = new KeyHandler(keyFilePath);
+            String connectionString = key.getConnectionStringFromFile(keyFilePath);
             String databaseName = key.GetKey("database");
             MongoClient client = MongoClients.create(connectionString);
             MongoDatabase mongodb = client.getDatabase(databaseName);
