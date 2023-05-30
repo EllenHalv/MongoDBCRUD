@@ -7,8 +7,7 @@ public class KeyHandler {
     private String keyFilePath;
     private Properties properties;
 
-    public KeyHandler() {
-        String keyFilePath = System.getProperty("user.home") + "/Documents/Java code stuff/API keys/MongoDB.txt";
+    public KeyHandler(String keyFilePath) {
         this.keyFilePath = keyFilePath;
         properties = loadProperties();
         connectionString = properties.getProperty("connectionString");
@@ -49,13 +48,25 @@ public class KeyHandler {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+
+        if (connectionString == null) {
+            var facade = new MongoDBPersonFacade();
+            setConnectionString(facade.connString + facade.databaseName);
+        }
+
         return connectionString;
     }
 
+
     // Get the key String from the properties file
     public String GetKey(String key) {
-
-        return properties.getProperty(key);
+        if (properties == null) {
+            var facade = new MongoDBPersonFacade();
+            setDatabaseName(facade.databaseName);
+            return databaseName;
+        } else {
+            return properties.getProperty(key);
+        }
     }
 
     public String getDatabaseName() {

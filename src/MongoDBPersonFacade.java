@@ -13,7 +13,7 @@ public class MongoDBPersonFacade {
     MongoClient client;
     MongoDatabase db;
     MongoCollection<Document> collection;
-    String connString = "mongodb://localhost:27017";
+    String connString = "mongodb://localhost:27017/";
     String databaseName = "shop";
 
     public MongoDBPersonFacade(String connString, String databaseName, MongoDatabase db, MongoCollection<Document> collection) {
