@@ -14,7 +14,7 @@ public class Main {
 
         // Create and connect to the database
         try {
-            String keyFilePath = "C:/Users/ellen/Documents/Java code stuff/API keys/MongoDB.txt";
+            String keyFilePath = "C:\\Users\\ellen\\Documents\\Java code stuff\\API keys\\MongoDB.txt";
             KeyHandler key = new KeyHandler(keyFilePath);
             String connectionString = key.getConnectionStringFromFile(keyFilePath);
             String databaseName = key.GetKey("database");
@@ -27,6 +27,7 @@ public class Main {
             return;
         }
 
+        try {
         // Insert documents
         Document c1 = Document.parse("{name: 'Bilbo Bags',"
                 + "age: '688',"
@@ -38,7 +39,11 @@ public class Main {
                 + "customerId: '002'}");
 
         customers.insertMany(List.of(c1, c2));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
+        try {
         Document e1 = Document.parse("{name: 'Herman Miller',"
                 + "age: '48',"
                 + "address: 'Chair City',"
@@ -49,6 +54,9 @@ public class Main {
                 + "employeeId: '102'}");
 
         employees.insertMany(List.of(e1, e2));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         // Find documents (in two different ways)
         FindIterable<Document> customersIterable = customers.find();

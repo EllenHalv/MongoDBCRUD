@@ -38,31 +38,28 @@ public class KeyHandler {
         return keyFilePath;
     }
 
-    // Get the connection string from the properties file
+    // Get the connection string from the properties file. If it is not found, set default connection string.
     public String getConnectionStringFromFile(String keyFilePath) {
         Properties prop = new Properties();
         try {
-            FileInputStream input = new FileInputStream(System.getProperty("user.home") + keyFilePath);
+            FileInputStream input = new FileInputStream(keyFilePath);
             prop.load(input);
             setConnectionString(prop.getProperty("connectionString"));
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
-        if (connectionString == null) {
-            var facade = new MongoDBPersonFacade();
-            setConnectionString(facade.connString + facade.databaseName);
+        if (connectionString == null || connectionString.isEmpty()) {
+            setConnectionString("mongodb://localhost:27017/shop");
         }
 
         return connectionString;
     }
 
-
-    // Get the key String from the properties file
+    // Get the key from the properties file. If it is not found, set default key.
     public String GetKey(String key) {
-        if (properties == null) {
-            var facade = new MongoDBPersonFacade();
-            setDatabaseName(facade.databaseName);
+        if (databaseName == null || databaseName.isEmpty()) {
+            setDatabaseName("shop");
             return databaseName;
         } else {
             return properties.getProperty(key);
