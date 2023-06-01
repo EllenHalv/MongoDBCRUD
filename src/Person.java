@@ -12,12 +12,13 @@ public class Person {
         this.address = address;
     }
 
-    public Person(String id, String name, String age, String address) {
-        this.id = id; // genereras av databasen
+    public Person(String name, String age, String address, String id) {
         this.name = name;
         this.age = age;
         this.address = address;
+        this.id = id;
     }
+
 
     public String getAddress() {
         return address;
@@ -53,10 +54,12 @@ public class Person {
 
     @Override
     public String toString() {
-        return "name='" + name + '\'' +
-                ", age='" + age + '\'' +
-                ", address='" + address + '\'';
+        return "name: " + name + "\n" +
+                "age: " + age + "\n" +
+                "address: " + address + "\n" +
+                "id: " + id;
     }
+
 
     public static Person fromDoc(Document doc) {
         if(doc== null) {
@@ -74,7 +77,8 @@ public class Person {
     }
 
     public Document toDoc() {
-        Document doc = new Document("name", name)
+        Document doc = new Document();
+        doc.append("name", name)
                 .append("age", age)
                 .append("address", address)
                 .append("id", id);
