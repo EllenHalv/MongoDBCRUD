@@ -1,11 +1,11 @@
-public class Employee extends Person{
+import org.bson.Document;
+
+public class Employee extends Person {
     private String employeeId;
-    public Employee(String name, String age, String address) {
-        super(name, age, address);
-    }
 
     public Employee(String name, String age, String address, String employeeId) {
-        super(employeeId, name, age, address);
+        super(name, age, address);
+        this.employeeId = employeeId;
     }
 
     public String getEmployeeId() {
@@ -14,5 +14,13 @@ public class Employee extends Person{
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    @Override
+    public Document toDoc() {
+        return new Document("name", getName())
+                .append("age", getAge())
+                .append("address", getAddress())
+                .append("id", employeeId);
     }
 }
