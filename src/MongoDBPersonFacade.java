@@ -29,12 +29,15 @@ public class MongoDBPersonFacade {
     }
     // Creates a new person in the database
     public void insertOne(Person person) {
-        Document doc = person.toDoc();
-        doc.remove("id");
+        MongoCollection<Document> employeeCollection = db.getCollection("employees");
+        MongoCollection<Document> customerCollection = db.getCollection("customers");
 
-        var find = collection.find(doc);
-        if (find.first() == null) {
-            collection.insertOne(doc);
+        Document doc = person.toDoc();
+
+        if (person instanceof Employee) {
+            employeeCollection.insertOne(doc);
+        } else if (person instanceof Customer) {
+            customerCollection.insertOne(doc);
         }
     }
 
@@ -61,15 +64,25 @@ public class MongoDBPersonFacade {
 
     // Updates a person by their id
     public void updateName(String id, String newValue) {
-        Document doc = new Document("id", new ObjectId(id));
+        Document doc = new Document("id", id);
         Document update = new Document("$set", new Document("name", newValue));
         collection.updateOne(doc, update);
     }
 
     // Delete a person by their id
     public void delete(String id) {
-        Document doc = new Document("id", new ObjectId(id));
-        collection.deleteOne(doc);
+        MongoCollection<Document> employeeCollection = db.getCollection("employees");
+        MongoCollection<Document> customerCollection = db.getCollection("customers");
+
+        Document doc = new Document("id", id);
+
+        if (id.startsWith("1")) {
+            employeeCollection.deleteOne(doc);
+        } else if (id.startsWith("0")) {
+            customerCollection.deleteOne(doc);
+        } else {
+            System.out.println("Okänt ID-format");
+        }
     }
 
     // Find a person by their name
@@ -116,35 +129,51 @@ public class MongoDBPersonFacade {
     }
 
     // Gets all customers from the database
-    public ArrayList<Person> getAllCustomers() {
+    public void getAllCustomers() {
         try {
             MongoCollection<Document> collection = db.getCollection("customers");
             FindIterable<Document> customersIterable = collection.find(new Document());
 
             ArrayList<Person> people = new ArrayList<>();
-            customersIterable.forEach(document -> people.add(Person.fromDoc(document)));
-            if (people.size() == 0) {
+            customersIterable.forEach(document -> {
+                Person person = Person.fromDoc(document);
+                System.out.println("name: " + person.getName());
+                System.out.println("age: " + person.getAge());
+                System.out.println("address: " + person.getAddress());
+                System.out.println("id: " + person.getId());
+                System.out.println();
+                people.add(person);
+            });
+
+            if (people.isEmpty()) {
                 System.out.println("No customers found");
             }
-            return people;
         } catch (Exception e) {
             System.out.println("Error getting customers: " + e.getMessage());
-            return null;
         }
     }
 
+
+
     // Gets all employees from the database
-    public ArrayList<Person> getAllEmployees() {
+    public void getAllEmployees() {
         try {
-            MongoCollection<Document> collection = db.getCollection("employees");
-            FindIterable<Document> employeesIterable = collection.find(new Document());
+            MongoCollection<Document> employees = db.getCollection("employees");
+            FindIterable<Document> employeesIterable = employees.find(new Document());
 
             ArrayList<Person> people = new ArrayList<>();
-            employeesIterable.forEach(document -> people.add(Person.fromDoc(document)));
-            return people;
+            employeesIterable.forEach(document -> {
+                Person person = Person.fromDoc(document);
+                System.out.println(person);  // Använder toString() för utskrift
+                System.out.println();
+                people.add(person);
+            });
+
+            if (people.isEmpty()) {
+                System.out.println("No employees found");
+            }
         } catch (Exception e) {
             System.out.println("Error getting employees: " + e.getMessage());
-            return null;
         }
     }
 
