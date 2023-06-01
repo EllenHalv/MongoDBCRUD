@@ -27,49 +27,22 @@ public class Main {
             return;
         }
 
-        try {
+        MongoDBPersonFacade facade = new MongoDBPersonFacade();
+
         // Insert documents
-        Document c1 = Document.parse("{name: 'Bilbo Bags',"
-                + "age: '688',"
-                + "address: 'Tolkienville',"
-                + "customerId: '001'}");
-        Document c2 = Document.parse("{name: 'Tony Stork',"
-                + "age: '42',"
-                + "address: 'Storkville',"
-                + "customerId: '002'}");
+        facade.insertOne(new Customer("Bilbo Bags", "688", "Tolkienville", "001"));
+        facade.insertOne(new Customer("Tony Stork", "42", "Storkville", "002"));
+        facade.insertOne(new Employee("Herman Miller", "48", "Chair City", "101"));
+        facade.insertOne(new Employee("Gilbert May", "21", "Desk City", "102"));
 
-        customers.insertMany(List.of(c1, c2));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        // Delete document
+        facade.delete("001");
 
-        try {
-        Document e1 = Document.parse("{name: 'Herman Miller',"
-                + "age: '48',"
-                + "address: 'Chair City',"
-                + "employeeId: '101'}");
-        Document e2 = Document.parse("{name: 'Gilbert May',"
-                + "age: '21',"
-                + "address: 'Desk City',"
-                + "employeeId: '102'}");
+        // Update document
+        facade.updateName("002", "Tony Stark");
 
-        employees.insertMany(List.of(e1, e2));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        // Find documents (in two different ways)
-        FindIterable<Document> customersIterable = customers.find();
-        customersIterable.forEach(document -> System.out.println(document.toJson()));
-
-        FindIterable<Document> employeesIterable = employees.find();
-        employeesIterable.forEach(document -> System.out.println(document.toJson()));
-
-        try {
-            MongoDBPersonFacade mongoDBPersonFacade = new MongoDBPersonFacade();
-            mongoDBPersonFacade.getAllCustomers().forEach(document -> System.out.println(document.toJson()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        // Get documents
+        facade.getAllCustomers();
+        facade.getAllEmployees();
     }
 }
